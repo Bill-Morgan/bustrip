@@ -1,0 +1,77 @@
+<br><br><br>
+<div class="container">
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <div class="h1">Bus Trip Calculator</div>
+        </div>
+    </div>
+    <br><br>
+    <form #busTripForm="ngForm" (ngSubmit)="calculate()">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col">
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="startTime">Start Time</label>
+                        <input id="startTime" class="form-control" name="startTime" [(ngModel)]="model.startTime"
+                            type="time" />
+                        </div>
+                    <div class="form-group col">
+                        <label for="stopTime">Destination Arrival Time</label>
+                        <input id="stopTime" class="form-control" name="stopTime" [(ngModel)]="model.stopTime"
+                            type="time" /><br />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="returnStart">Return Start time</label>
+                        <input id="returnStart" class="form-control" name="returnStart"
+                            [(ngModel)]="model.returnStartTime" type="time" />
+                    </div>
+                    <div class="form-group col">
+                        <label for="finishTime">Finish Time</label>
+                        <input id="finishTime" class="form-control" name="finishTime" [(ngModel)]="model.endTime"
+                            type="time" /><br />
+                    </div>
+                </div><br>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="optStop">Optional wait time during drive in minutes</label>
+                        <input id="optStop" class="form-control" name="optStop"
+                            [(ngModel)]="model.optStop" type="number" />
+                    </div>
+                </div><br>
+            </div>
+            <div class="col"></div>
+        </div>
+        <div class="row">
+            <div class="form-check form-check-inline col  d-flex justify-content-center">
+                <div class="form-group form-check-inline">
+                    <input id="pretrip" type="checkbox" name="pretrip" [(ngModel)]="model.pretrip" />
+                    <label for="pretrip">&nbsp;&nbsp;&nbsp;Pre trip? </label>
+                </div>
+
+                <div class="form-group form-check-inline">
+                    <input id="warmup" type="checkbox" name="warmup" [(ngModel)]="model.warmup" type="checkbox" />
+                    <label for="warmup" class="form-check-label">&nbsp;&nbsp;&nbsp;Warm up?</label>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="row">
+                <div class="col d-flex justify-content-center">
+                    <button type="submit">Calculate</button>
+                </div>
+        </div>
+    </form>
+    <br><br><br>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <ul class="h4">
+                <li>Drive Time: {{calcData.drive}}</li>
+                <li>Wait Time: {{calcData.wait}}</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
