@@ -13,4 +13,4 @@ export class BusTrip {
         public endTime: string
     ) {  }
   
-  }
+}

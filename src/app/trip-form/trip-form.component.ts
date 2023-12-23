@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms'
+// import { NgForm } from '@angular/forms'
 import { BusTrip } from '../tripdata'
-import { timestamp } from 'rxjs';
+// import { timestamp } from 'rxjs';
+import { LocalService } from "../local.service"
 
 @Component({
   selector: 'app-trip-form',
@@ -11,10 +12,16 @@ import { timestamp } from 'rxjs';
 export class TripFormComponent implements OnInit {
 
   model = new BusTrip(false, false, "", "", "", 0, "")
+  userData = new LocalService();
   calcData: any = { 'drive': 0, 'wait': 0 }
   constructor() { }
 
   ngOnInit(): void {
+    this.model = this.userData.loadAll()
+  }
+
+  fieldUpdate(fName: keyof BusTrip) {
+    this.userData.saveData(fName, String(this.model[fName]));
   }
 
   calculate() {
@@ -51,7 +58,6 @@ export class TripFormComponent implements OnInit {
 
     this.calcData.drive = driveTime;
     this.calcData.wait = waitTime;
-    console.warn(driveTime)
   }
 
   convertQtrHr(time: number, up: boolean) {
@@ -64,4 +70,14 @@ export class TripFormComponent implements OnInit {
     return h + m/60.0
   }
 
+  reset() {
+    this.model.endTime = "";
+    this.model.optStop = 0;
+    this.model.pretrip = false;
+    this.model.returnStartTime = "";
+    this.model.startTime = "";
+    this.model.stopTime = "";
+    this.model.warmup = false;
+    this.userData.clearData();
+  }
 }

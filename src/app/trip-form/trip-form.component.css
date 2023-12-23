@@ -1,0 +1,35 @@
+
+.floatleft {
+    float: left;
+}
+
+.floatright {
+    float: right;
+}
+
+.smalltext {
+    font-size:90%;
+}
+
+.block {
+    display: block;
+}
+
+button {
+    background-color: blue;
+    color: white;
+}
+
+form {
+    border: 3px solid black;
+    background-color: yellow;
+    margin: auto;
+    max-width: 60%;
+    min-width: 300px;
+    padding: 20px;
+}
+
+.cp {
+    text-align: center;
+    font-size: small;
+}
