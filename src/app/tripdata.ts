@@ -10,7 +10,8 @@ export class BusTrip {
         public stopTime: string,
         public returnStartTime: string,
         public optStop: number,
-        public endTime: string
+        public endTime: string,
+        public pauseTime: string
     ) {  }
   
 }

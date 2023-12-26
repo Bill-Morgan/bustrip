@@ -16,7 +16,11 @@ export class LocalService {
   }
 
   public getData(key: string) {
-    return localStorage.getItem(key)
+    let retVal = localStorage.getItem(key);
+    if (!retVal) {
+      retVal = "";
+    }
+    return (retVal)
   }
   public removeData(key: string) {
     localStorage.removeItem(key);
@@ -28,7 +32,7 @@ export class LocalService {
   }
 
   public  loadAll() {
-    var model = new BusTrip(false, false, "", "", "", 0, "");
+    var model = new BusTrip(false, false, "", "", "", 0, "", "");
     model.endTime = String(this.getData('endTime'));
     model.optStop = Number(this.getData('optStop'));
     model.pretrip = Boolean(this.getData('pretrip'));
