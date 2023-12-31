@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-// import { NgForm, FormsModule, NgModel } from '@angular/forms'
 import { BusTrip } from '../tripdata'
-// import { timestamp } from 'rxjs';
 import { LocalService } from "../local.service"
-// import { Directive } from '@angular/core';
-// import { jsDocComment } from '@angular/compiler';
 
 
 @Component({
@@ -14,10 +10,9 @@ import { LocalService } from "../local.service"
 })
 export class TripFormComponent implements OnInit {
 
-  model = new BusTrip(false, false, "", "", "", 0, "", "")
+  model = new BusTrip(false, false, "", "", "", "", 0, "", "")
   localData = new LocalService();
   calcData: any = { 'drive': 0, 'wait': 0 };
-  paused: boolean = false;
   constructor() { }
 
   ngOnInit(): void {
@@ -26,6 +21,17 @@ export class TripFormComponent implements OnInit {
 
   ngAfterContentInit() {
     this.hover();
+    this.initAll();
+  }
+
+  initAll() {
+    const inputs = document.getElementsByTagName('input');
+    if (this.model.btnMode == 'manual') {
+      this.model.btnMode = 'auto';
+    } else {
+      this.model.btnMode = 'manual';
+    }
+    this.changeMode()
     this.updateElmsStatus();
   }
 
@@ -64,7 +70,9 @@ export class TripFormComponent implements OnInit {
       } else {
         this.model.endTime = String(new Date()).slice(16, 21);
         this.localData.saveData('endTime', String(this.model['endTime']));
-        this.setElmStatus(endTime, 'enabled')
+        this.setElmStatus(endTime, 'enabled');
+        tripButtons?.classList.add('hidden', 'hidden');
+        this.calculate();
       }
     }
     this.updateElmsStatus()
@@ -79,8 +87,7 @@ export class TripFormComponent implements OnInit {
     const pauseBtn = document.getElementById('pauseButton');
     const resumeBtn = document.getElementById('resumeButton');
     const endBtn = document.getElementById('endButton');
-    const tripButtons = document.getElementById('tripButtonGroup');
-    const parentElm = tripButtons?.parentElement;
+    var inputs = document.getElementsByTagName('input');
     if (this.model.startTime == "") {
       this.moveButtons('going');
       this.setElmStatus(startBtn, 'enabled');
@@ -88,6 +95,7 @@ export class TripFormComponent implements OnInit {
       this.setElmStatus(resumeBtn, 'hidden');
       this.setElmStatus(endBtn, 'hidden');
     } else if (this.model.stopTime == "") {
+      inputs[0].removeAttribute('disabled');
       this.moveButtons('going');
       this.setElmStatus(startBtn, 'hidden');
       if (this.model.pauseTime == "") {
@@ -105,9 +113,14 @@ export class TripFormComponent implements OnInit {
       this.setElmStatus(pauseBtn, 'hidden');
       this.setElmStatus(resumeBtn, 'hidden');
       this.setElmStatus(endBtn, 'hidden');
+      inputs[0].removeAttribute('disabled');
+      inputs[1].removeAttribute('disabled');
     } else if (this.model.endTime == "") {
       this.moveButtons('coming');
       this.setElmStatus(startBtn, 'hidden');
+      inputs[0].removeAttribute('disabled');
+      inputs[1].removeAttribute('disabled');
+      inputs[2].removeAttribute('disabled');
       if (this.model.pauseTime == "") {
         this.setElmStatus(pauseBtn, 'enabled');
         this.setElmStatus(resumeBtn, 'hidden');
@@ -117,6 +130,12 @@ export class TripFormComponent implements OnInit {
         this.setElmStatus(resumeBtn, 'enabled');
         this.setElmStatus(endBtn, 'hidden');
       }
+    } else {
+      var inputs = document.getElementsByTagName('input');
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].removeAttribute('disabled')
+      }
+
     }
   }
 
@@ -139,17 +158,15 @@ export class TripFormComponent implements OnInit {
   fieldUpdate(fName: keyof BusTrip) {
     this.localData.saveData(fName, String(this.model[fName]));
     this.updateElmsStatus();
+    (document.getElementById('calcBtn'))?.removeAttribute('disabled');
   }
 
   hover() {
     function is_touch_enabled() {
-
-      // Check if touch is enabled 
       return "ontouchstart"
         in window || navigator.maxTouchPoints > 0;
     }
     if (!is_touch_enabled()) {
-
       var b = document.getElementsByClassName('btn')
       for (let i = 0; i < b.length; i++) {
         b[i]?.classList.add("notouch");
@@ -165,30 +182,37 @@ export class TripFormComponent implements OnInit {
   }
 
   calculate() {
-    var stopTime = this.timeStringToFloat(this.model.stopTime)
-    var startTime = this.timeStringToFloat(this.model.startTime)
-    var returnStartTime = this.timeStringToFloat(this.model.returnStartTime)
-    var endTime = this.timeStringToFloat(this.model.endTime)
+    var stopTime = this.timeStringToFloat(this.model.stopTime);
+    var startTime = this.timeStringToFloat(this.model.startTime);
+    var returnStartTime = this.timeStringToFloat(this.model.returnStartTime);
+    var endTime = this.timeStringToFloat(this.model.endTime);
     var optStopTime = this.model.optStop / 60.0
-    var driveTime = Math.max(((stopTime - startTime) + (endTime - returnStartTime) - optStopTime), 2);
+    var driveTime = (stopTime - startTime) + (endTime - returnStartTime);
     var waitTime = returnStartTime - stopTime + optStopTime
+    console.warn()
     if (isNaN(stopTime) || isNaN(startTime) || isNaN(returnStartTime) || isNaN(endTime) || stopTime < startTime || returnStartTime < stopTime || endTime < returnStartTime) {
       window.alert("ERROR: Please double check your times!")
-      return
+      return;
     }
-    if (this.model.pretrip == true) {
+
+    if (this.model.pretrip == true && driveTime > 1.75) {
       driveTime += .25;
     }
+
+    driveTime = Math.max(driveTime, 2.0);
+
     if (this.model.warmup) {
       waitTime -= .25;
       driveTime += .25;
     }
+
     driveTime = Math.floor(driveTime * 100)
     if (driveTime % 25 != 0) {
       driveTime += 25
       driveTime = (driveTime - driveTime % 25)
     }
     driveTime /= 100
+
     waitTime = Math.floor(waitTime * 100)
     if (waitTime % 25 != 0) {
       waitTime += 25
@@ -198,12 +222,48 @@ export class TripFormComponent implements OnInit {
 
     this.calcData.drive = driveTime;
     this.calcData.wait = waitTime;
+    (document.getElementById('calcBtn'))?.setAttribute('disabled', 'disabled');
   }
 
   timeStringToFloat(tIn: string) {
     let h = Number(tIn.split(':')[0])
     let m = Number(tIn.split(':')[1])
     return h + m / 60.0
+  }
+
+  changeMode() {
+    var stopTime = this.timeStringToFloat(this.model.stopTime)
+    var startTime = this.timeStringToFloat(this.model.startTime)
+    var returnStartTime = this.timeStringToFloat(this.model.returnStartTime)
+    var endTime = this.timeStringToFloat(this.model.endTime)
+    const button = document.getElementById("btnMode");
+    const inputs = document.getElementsByClassName("time-input");
+    const tripButtons = document.getElementById('tripButtonGroup');
+    console.warn(inputs.length)
+    console.warn(this.model.btnMode)
+    console.warn(button)
+    if (this.model.btnMode == 'auto') {
+      button!.innerHTML = "Auto Entry";
+      for (let i = 0; i < inputs.length; i++) {
+        inputs[i].removeAttribute("disabled");
+      }
+      tripButtons?.classList.add('hidden');
+      this.model.btnMode = 'manual';
+      this.localData.saveData('btnMode', 'manual')
+    } else {
+      button!.innerHTML = "Manual Entry";
+      for (let i = 0; i < inputs.length; i++) {
+        inputs[i].setAttribute("disabled", "disabled");
+      }
+      if (isNaN(stopTime) || isNaN(startTime) || isNaN(returnStartTime) || isNaN(endTime)) {
+        tripButtons?.classList.remove('hidden');
+      } else {
+        tripButtons?.classList.add('hidden');
+      }
+      this.updateElmsStatus();
+      this.model.btnMode = 'auto';
+      this.localData.saveData('btnMode', 'auto')
+    }
   }
 
   reset() {
@@ -215,6 +275,11 @@ export class TripFormComponent implements OnInit {
     this.model.stopTime = "";
     this.model.warmup = false;
     this.model.pauseTime = "";
+    (document.getElementById('calcBtn'))?.removeAttribute('disabled');
+    this.model.btnMode = 'manual';
+    this.calcData.drive = 0;
+    this.calcData.wait = 0;
+    this.changeMode();
     this.localData.clearData();
     this.moveButtons('going')
     this.updateElmsStatus();

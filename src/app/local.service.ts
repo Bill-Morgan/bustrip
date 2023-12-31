@@ -32,7 +32,7 @@ export class LocalService {
   }
 
   public  loadAll() {
-    var model = new BusTrip(false, false, "", "", "", 0, "", "");
+    var model = new BusTrip(false, false, "", "", "", "", 0, "", "");
     model.endTime = String(this.getData('endTime'));
     model.optStop = Number(this.getData('optStop'));
     model.pretrip = Boolean(this.getData('pretrip'));
@@ -40,6 +40,7 @@ export class LocalService {
     model.startTime = String(this.getData('startTime'));
     model.stopTime = String(this.getData('stopTime'));
     model.warmup = Boolean(this.getData('warmup'));
+    model.btnMode = String(this.getData('btnMode'))
     return (model);
   }
 
