@@ -1,37 +1,33 @@
 <br><br><br>
-<div class="container">
-    <div class="row">
-        <div class="col d-flex justify-content-center">
-            <div class="h1">Bus Trip Calculator</div>
-        </div>
-    </div>
-    <br>
+<div class="container-center">
+    <h1>Bus Trip Calculator</h1>
+</div>
+<br>
+<div class="container-center">
     <form #busTripForm="ngForm" (ngSubmit)="calculate()">
         <section id="going">
-            <div class="row" id="tripButtonGroup">
-                <div class="col d-flex justify-content-center">
-                    <button id="startButton" type="button" class="btn btn-lg touch" (click)="buttonClick('startButton')">Start Drive</button>
-                    <button id="pauseButton" type="button" class="btn btn-lg touch" (click)="buttonClick('pauseButton')">Pause Drive</button>
-                    <button id="resumeButton" type="button" class="btn btn-lg touch" (click)="buttonClick('resumeButton')">Resume Drive</button>
-                    <button id="endButton" type="button" class="btn btn-lg touch" (click)="buttonClick('endButton')">End Drive</button>
-                </div>
+            <div class="container-center" id="tripButtonGroup">
+                <button id="startButton" type="button" class="btn touch" (click)="buttonClick('startButton')">Start
+                    Drive</button>
+                <button id="pauseButton" type="button" class="btn touch" (click)="buttonClick('pauseButton')">Pause
+                    Drive</button>
+                <button id="resumeButton" type="button" class="btn touch" (click)="buttonClick('resumeButton')">Resume
+                    Drive</button>
+                <button id="endButton" type="button" class="btn touch" (click)="buttonClick('endButton')">End
+                    Drive</button>
             </div><br>
         </section>
-        <div class="row">
-            <div class="col"></div>
-            <div class="col d-flex justify-content-center">
-                <div class="form-group col">
-                    <label for="startTime">Start Time <span class="block">(not counting pre-trip)</span></label>
-                    <input id="startTime" class="form-control" name="startTime" [(ngModel)]="model.startTime"
-                        (change)="fieldUpdate('startTime')" type="time" disabled>
-                </div>
-                <div class="form-group col">
-                    <label for="stopTime"><span class="block">&nbsp;</span>Destination Arrival Time</label>
-                    <input id="stopTime" class="form-control" name="stopTime" [(ngModel)]="model.stopTime"
-                        (change)="fieldUpdate('stopTime')" type="time" disabled><br>
-                </div>
+        <div class="container-center">
+            <div class="container-vertical">
+                <label for="startTime">Start Time <span class="block">(not counting pre-trip)</span></label>
+                <input id="startTime" class="form-control" name="startTime" [(ngModel)]="model.startTime"
+                    (change)="fieldUpdate('startTime')" type="time" disabled>
             </div>
-            <div class="col"></div>
+            <div class="container-vertical">
+                <label for="stopTime"><span class="block">&nbsp;</span>Destination Arrival Time</label>
+                <input id="stopTime" class="form-control" name="stopTime" [(ngModel)]="model.stopTime"
+                    (change)="fieldUpdate('stopTime')" type="time" disabled><br>
+            </div>
         </div>
         <section id="coming"></section>
         <div class="row">
@@ -41,7 +37,8 @@
                     <div class="form-group col">
                         <label for="returnStartTime"><span class="block">&nbsp;</span>Return Start time</label>
                         <input id="returnStartTime" class="form-control" name="returnStartTime"
-                            [(ngModel)]="model.returnStartTime" (change)="fieldUpdate('returnStartTime')" type="time" disabled>
+                            [(ngModel)]="model.returnStartTime" (change)="fieldUpdate('returnStartTime')" type="time"
+                            disabled>
                     </div>
                     <div class="form-group col">
                         <label for="endTime"><span class="block">&nbsp;</span>Finish Time</label>
@@ -90,6 +87,5 @@
             </div>
         </div>
     </form>
-    <p class="cp">&copy; 2023 WAM Computers</p>
-
 </div>
+<p class="cp">&copy; 2023 WAM Computers</p>

@@ -1,4 +1,26 @@
 
+.container {
+    display: flex;
+}
+
+.container-center {
+    display: flex;
+    justify-content: center;
+}
+
+.container-vertical {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.btn {
+    padding: 10px;
+    margin: 10px;
+    background-color: black;
+    color: white;
+    border-radius: 10px;
+}
 .floatleft {
     float: left;
 }
@@ -19,10 +41,6 @@ button {
     background-color: black;
     color: white;
     margin: 10px;
-}
-
-.form-group {
-    padding: 10px;
 }
 
 .notouch:hover {

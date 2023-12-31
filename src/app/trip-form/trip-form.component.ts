@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-// import { NgForm } from '@angular/forms'
+// import { NgForm, FormsModule, NgModel } from '@angular/forms'
 import { BusTrip } from '../tripdata'
 // import { timestamp } from 'rxjs';
 import { LocalService } from "../local.service"
-import { Directive } from '@angular/core';
-import { jsDocComment } from '@angular/compiler';
+// import { Directive } from '@angular/core';
+// import { jsDocComment } from '@angular/compiler';
+
 
 @Component({
   selector: 'app-trip-form',

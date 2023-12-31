@@ -1,5 +1,3 @@
-import { Time } from "@angular/common";
-import { Binary } from "@angular/compiler";
 
 export class BusTrip {
 
