@@ -57,8 +57,6 @@ export class TripFormComponent implements OnInit {
       this.model.pauseTime = String(new Date()).slice(16, 21);
       this.localData.saveData('pauseTime', String(this.model['pauseTime']));
     } else if (button == 'resumeButton') {
-      console.warn(String(new Date()).slice(16, 21));
-      console.warn(this.model.pauseTime)
       this.model.optStop = this.model.optStop + this.timeMinutes(String(new Date()).slice(16, 21)) - this.timeMinutes(this.model.pauseTime);
       this.model.pauseTime = "";
       this.localData.saveData('optStop', String(this.model.optStop));
@@ -189,7 +187,6 @@ export class TripFormComponent implements OnInit {
     var optStopTime = this.model.optStop / 60.0
     var driveTime = (stopTime - startTime) + (endTime - returnStartTime);
     var waitTime = returnStartTime - stopTime + optStopTime
-    console.warn()
     if (isNaN(stopTime) || isNaN(startTime) || isNaN(returnStartTime) || isNaN(endTime) || stopTime < startTime || returnStartTime < stopTime || endTime < returnStartTime) {
       window.alert("ERROR: Please double check your times!")
       return;
@@ -239,9 +236,6 @@ export class TripFormComponent implements OnInit {
     const button = document.getElementById("btnMode");
     const inputs = document.getElementsByClassName("time-input");
     const tripButtons = document.getElementById('tripButtonGroup');
-    console.warn(inputs.length)
-    console.warn(this.model.btnMode)
-    console.warn(button)
     if (this.model.btnMode == 'auto') {
       button!.innerHTML = "Auto Entry";
       for (let i = 0; i < inputs.length; i++) {
