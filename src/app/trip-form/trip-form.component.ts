@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BusTrip } from '../tripdata'
 import { LocalService } from "../local.service"
+import { interval, Subscription } from "rxjs"
 
 
 @Component({
@@ -8,29 +9,33 @@ import { LocalService } from "../local.service"
   templateUrl: './trip-form.component.html',
   styleUrls: ['./trip-form.component.css']
 })
-export class TripFormComponent implements OnInit {
+export class TripFormComponent implements OnInit, OnDestroy {
 
   model = new BusTrip(false, false, "", "", "", "", 0, "", "")
   localData = new LocalService();
   calcData: any = { 'drive': 0, 'wait': 0 };
-  constructor() { }
+  subscription: Subscription;
+  source = interval(60000);
+
+  constructor() {
+    this.subscription = this.source.subscribe(val => window.location.reload())  
+   }
 
   ngOnInit(): void {
-    this.model = this.localData.loadAll()
+    this.model = this.localData.loadAll();
+  }
+
+  ngOnDestroy(): void{
+    this.subscription.unsubscribe();
   }
 
   ngAfterContentInit() {
-    this.hover();
+    this.setTouch();
     this.initAll();
   }
 
   initAll() {
-    const inputs = document.getElementsByTagName('input');
-    if (this.model.btnMode == 'manual') {
-      this.model.btnMode = 'auto';
-    } else {
-      this.model.btnMode = 'manual';
-    }
+    this.model.btnMode = (this.model.btnMode == 'manual') ? 'auto' : 'manual'
     this.changeMode()
     this.updateElmsStatus();
   }
@@ -133,11 +138,26 @@ export class TripFormComponent implements OnInit {
       for (var i = 0; i < inputs.length; i++) {
         inputs[i].removeAttribute('disabled')
       }
-
     }
+    this.setTimeStatus();
   }
 
-  setElmStatus(elm: HTMLElement | null, status: string) {
+  setTimeStatus() {
+    console.warn('setting status')
+    const startTime = document.getElementById('startTime');
+    const stopTime = document.getElementById('stopTime');
+    const returnStartTime = document.getElementById('returnStartTime');
+    const endTime = document.getElementById('endTime');
+    this.setElmStatus(startTime, (this.model.startTime != ""));
+    this.setElmStatus(stopTime, (this.model.stopTime != ""));
+    this.setElmStatus(returnStartTime, this.model.returnStartTime != "");
+    this.setElmStatus(endTime, (this.model.endTime != ""));
+  }
+
+  setElmStatus(elm: HTMLElement | null, status: string | boolean) {
+    if (typeof status === 'boolean') {
+      status = (status == true)? 'enabled' : 'disabled';
+    }
     switch (status) {
       case 'disabled':
         elm?.removeAttribute('hidden');
@@ -159,7 +179,7 @@ export class TripFormComponent implements OnInit {
     (document.getElementById('calcBtn'))?.removeAttribute('disabled');
   }
 
-  hover() {
+  setTouch() {
     function is_touch_enabled() {
       return "ontouchstart"
         in window || navigator.maxTouchPoints > 0;
@@ -185,7 +205,7 @@ export class TripFormComponent implements OnInit {
     var returnStartTime = this.timeStringToFloat(this.model.returnStartTime);
     var endTime = this.timeStringToFloat(this.model.endTime);
     var optStopTime = this.model.optStop / 60.0
-    var driveTime = (stopTime - startTime) + (endTime - returnStartTime);
+    var driveTime = (stopTime - startTime) + (endTime - returnStartTime) - optStopTime;
     var waitTime = returnStartTime - stopTime + optStopTime
     if (isNaN(stopTime) || isNaN(startTime) || isNaN(returnStartTime) || isNaN(endTime) || stopTime < startTime || returnStartTime < stopTime || endTime < returnStartTime) {
       window.alert("ERROR: Please double check your times!")

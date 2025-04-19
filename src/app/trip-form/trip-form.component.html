@@ -1,3 +1,14 @@
+<script>
+    document.ready(function(){
+        setInterval(function(){ reload_page(); },30*1000);
+    });
+
+    function reload_page()
+ {
+    window.location.reload(true);
+ }
+
+</script>
 <br><br><br>
 <div class="container-center">
     <h1>Bus Trip Calculator</h1>
@@ -49,7 +60,7 @@
         </section><br>
         <section id="waitTime">
             <div class="container-center">
-                <div class="container-vertical">
+                <div class="container-vertical  input-group">
                     <label for="optStop">Optional wait time during drive in minutes</label>
                     <input id="optStop" class="form-control" name="optStop" [(ngModel)]="model.optStop"
                         (change)="fieldUpdate('optStop')" type="number" min="0" size="5">
@@ -61,7 +72,7 @@
                 <div class="container">
                     <input id="pretrip" type="checkbox" name="pretrip" [(ngModel)]="model.pretrip"
                         (change)="fieldUpdate('pretrip')">
-                    <label for="pretrip">&nbsp;&nbsp;&nbsp;Pre-trip? </label>
+                    <label class="left" for="pretrip">&nbsp;&nbsp;&nbsp;Pre-trip? </label>
                 </div>
                 <div class="container">
                     <input id="warmup" type="checkbox" name="warmup" [(ngModel)]="model.warmup" type="checkbox"
@@ -88,4 +99,4 @@
         </section>
     </form>
 </div>
-<p class="cp">&copy; 2024 WAM Computers</p>
+<p class="copy">&copy; 2024 WAM Computers</p>

@@ -38,6 +38,7 @@ button {
     background-color: black;
     color: white;
     margin: 10px;
+    cursor: pointer;
 }
 
 button:disabled {
@@ -46,10 +47,6 @@ button:disabled {
 
 .notouch:enabled:hover {
     background-color:blueviolet;
-}
-
-.touch:enabled:hover {
-    background-color: blueviolet;
 }
 
 .hidden {
@@ -65,11 +62,12 @@ form {
     padding: 20px;
 }
 
-input {
-    width: fit-content;
+input[type=time], input[type=number] {
+    box-sizing: border-box;
+    width: 125px;
 }
 
-.cp {
+.copy {
     text-align: center;
     font-size: small;
 }
